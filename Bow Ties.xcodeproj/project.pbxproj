@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		490A9A001FD6C39200241414 /* Bowtie+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490A99FE1FD6C39200241414 /* Bowtie+CoreDataClass.swift */; };
 		490A9A011FD6C39200241414 /* Bowtie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490A99FF1FD6C39200241414 /* Bowtie+CoreDataProperties.swift */; };
+		490A9A051FD709A500241414 /* UIColor+colorDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490A9A041FD709A500241414 /* UIColor+colorDict.swift */; };
 		95BD9F471F5018FC0058C9F4 /* SampleData.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE116B6B1F254BFD00BC128B /* SampleData.plist */; };
 		FEA6248E1D6A54FA0011CF8F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA6248D1D6A54FA0011CF8F /* AppDelegate.swift */; };
 		FEA624901D6A54FA0011CF8F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA6248F1D6A54FA0011CF8F /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		490A99FE1FD6C39200241414 /* Bowtie+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bowtie+CoreDataClass.swift"; sourceTree = "<group>"; };
 		490A99FF1FD6C39200241414 /* Bowtie+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bowtie+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		490A9A041FD709A500241414 /* UIColor+colorDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+colorDict.swift"; sourceTree = "<group>"; };
 		FE116B6B1F254BFD00BC128B /* SampleData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SampleData.plist; sourceTree = "<group>"; };
 		FEA6248A1D6A54FA0011CF8F /* Bow Ties.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bow Ties.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEA6248D1D6A54FA0011CF8F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -52,9 +54,18 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		490A9A031FD7098400241414 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				490A9A041FD709A500241414 /* UIColor+colorDict.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		FEA624811D6A54FA0011CF8F = {
 			isa = PBXGroup;
 			children = (
+				490A9A031FD7098400241414 /* Extensions */,
 				490A9A021FD6C39D00241414 /* Model */,
 				FEA6248C1D6A54FA0011CF8F /* Bow Ties */,
 				FEA6248B1D6A54FA0011CF8F /* Products */,
@@ -163,6 +174,7 @@
 				FEA624961D6A54FA0011CF8F /* Bow_Ties.xcdatamodeld in Sources */,
 				FEA624901D6A54FA0011CF8F /* ViewController.swift in Sources */,
 				FEA6248E1D6A54FA0011CF8F /* AppDelegate.swift in Sources */,
+				490A9A051FD709A500241414 /* UIColor+colorDict.swift in Sources */,
 				490A9A001FD6C39200241414 /* Bowtie+CoreDataClass.swift in Sources */,
 				490A9A011FD6C39200241414 /* Bowtie+CoreDataProperties.swift in Sources */,
 			);

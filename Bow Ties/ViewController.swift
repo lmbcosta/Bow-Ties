@@ -36,10 +36,26 @@ class ViewController: UIViewController {
   
   // MARK: - Properties
   var managedContext: NSManagedObjectContext!
-
+  var currentBowtie: Bowtie!
+  
   // MARK: - View Life Cycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    // Ensures that I have data to fetch
+    self.insertSampleData()
+    // Fetch data
+    let fetchRequest: NSFetchRequest<Bowtie> = Bowtie.fetchRequest()
+    let firstTitle = self.segmentedControl.titleForSegment(at: 0)!
+    //fetchRequest.predicate = NSPredicate(format: "%K = %@", [#keyPath(Bowtie.searchKey), firstTitle])
+    fetchRequest.predicate = NSPredicate(format: "%K = %@", argumentArray: [#keyPath(Bowtie.searchKey), firstTitle])
+    
+    do {
+      let results = try managedContext.fetch(fetchRequest)
+      self.currentBowtie = results.first
+      populate(bowtie: results.first!)
+    } catch let error as NSError{
+      print("Could not fetch \(error), \(error.description)")
+    }
   }
 
   // MARK: - IBActions
@@ -48,10 +64,108 @@ class ViewController: UIViewController {
   }
 
   @IBAction func wear(_ sender: Any) {
-
+    // Update bowtie details
+    currentBowtie.lastWorn = NSDate()
+    let times = currentBowtie.timesWorn
+    currentBowtie.timesWorn = times + 1
+    
+    // Save changes
+    do {
+      try self.managedContext.save()
+      // Get managedObject with changes
+      populate(bowtie: currentBowtie)
+    } catch let error as NSError {
+      print("Could not fetch \(error): \(error.description)")
+    }
   }
   
   @IBAction func rate(_ sender: Any) {
 
   }
+  
+  // MARK: - Private functions
+  fileprivate func populate(bowtie: Bowtie) {
+    // Get bowtie properties
+    guard let imageData = bowtie.photoData as Data?, let lastWorn = bowtie.lastWorn as Date?, let tintColor = bowtie.tintColor as? UIColor else {return}
+    self.imageView.image = UIImage(data: imageData)
+    self.nameLabel.text = bowtie.name
+    self.ratingLabel.text = "Rating: \(bowtie.rating)/5"
+    self.timesWornLabel.text = "# of times worn: \(bowtie.timesWorn)"
+    
+    // Date
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .short
+    dateFormatter.timeStyle = .none
+    self.lastWornLabel.text = "Last worn: " + dateFormatter.string(for: lastWorn)!
+    self.favoriteLabel.isHidden = !bowtie.isFavourite
+    self.view.tintColor = tintColor
+  }
+  
+  
+  
+  fileprivate func insertSampleData() {
+    let fetch: NSFetchRequest<Bowtie> = Bowtie.fetchRequest()
+    fetch.predicate = NSPredicate(format: "searchKey != nil")
+    
+    let count = try! managedContext.count(for: fetch)
+    
+    if count > 0 {
+      // Sample data already in Core Data
+      return
+    }
+    
+    // Get plist resource
+    guard let path = Bundle.main.path(forResource: "SampleData", ofType: "plist"), let dataArray = NSArray(contentsOfFile: path) else {return}
+    
+    for dict in dataArray {
+      // NSEntityDescription
+      let entity = NSEntityDescription.entity(forEntityName: "Bowtie", in: managedContext)!
+      // Managed Object Bowtie
+      let bowtie =  Bowtie(entity: entity, insertInto: managedContext)
+      // Accessing plist properties for each bowtie
+      if let bowtieDict = dict as? [String: Any] {
+        // Fill bowtie attributes
+        bowtie.id = UUID(uuidString: bowtieDict["id"] as! String)
+        bowtie.isFavourite = bowtieDict["isFavorite"] as! Bool
+        bowtie.lastWorn = bowtieDict["lastWorn"] as? NSDate
+        bowtie.name = bowtieDict["name"] as? String
+        // photoimage
+        let image = UIImage(named: bowtieDict["imageName"] as! String)
+        let photoData = UIImagePNGRepresentation(image!)!
+        bowtie.photoData = photoData as NSData
+        bowtie.rating = bowtieDict["rating"] as! Double
+        bowtie.searchKey = bowtieDict["searchKey"] as? String
+        // times worn
+        let timesWorn = bowtieDict["timesWorn"] as! NSNumber
+        bowtie.timesWorn = timesWorn.int32Value
+        bowtie.url = URL(string: bowtieDict["url"] as! String)
+        // Compose color
+        let colorDict = bowtieDict["tintColor"] as! [String: Any]
+        if let color = UIColor.color(dict: colorDict) {
+          bowtie.tintColor = color
+        }
+      }
+      do {
+        try managedContext.save()
+        print("Dummies save on CoreData")
+      } catch {
+        print("Dummies were not commited in CoreData")
+      }
+    }
+  }
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
