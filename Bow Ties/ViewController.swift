@@ -21,6 +21,7 @@
  */
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
 
@@ -32,6 +33,9 @@ class ViewController: UIViewController {
   @IBOutlet weak var timesWornLabel: UILabel!
   @IBOutlet weak var lastWornLabel: UILabel!
   @IBOutlet weak var favoriteLabel: UILabel!
+  
+  // MARK: - Properties
+  var managedContext: NSManagedObjectContext!
 
   // MARK: - View Life Cycle
   override func viewDidLoad() {
