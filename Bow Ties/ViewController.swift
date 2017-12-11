@@ -80,7 +80,23 @@ class ViewController: UIViewController {
   }
   
   @IBAction func rate(_ sender: Any) {
-
+    // Compose an Alert
+    let alert = UIAlertController(title: "New Rating", message: "Rate this bow tie", preferredStyle: .alert)
+    // Add Texfield to the alert
+    alert.addTextField { textField in
+      textField.keyboardType = .decimalPad
+    }
+    
+    // Actions
+    let cancelAction = UIAlertAction(title: "Cancel", style: .default)
+    let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] action in
+      guard let text = alert.textFields?.first?.text else {return}
+      self?.update(rating: text)
+    }
+    
+    alert.addAction(cancelAction)
+    alert.addAction(saveAction)
+    self.present(alert, animated: true)
   }
   
   // MARK: - Private functions
@@ -150,6 +166,23 @@ class ViewController: UIViewController {
         print("Dummies save on CoreData")
       } catch {
         print("Dummies were not commited in CoreData")
+      }
+    }
+  }
+  
+  fileprivate func update(rating: String?) {
+    guard let ratingString = rating, let rating = Double(ratingString) else {return}
+    self.currentBowtie.rating = rating
+    
+    do {
+      try managedContext.save()
+      // Show changes
+      self.populate(bowtie: currentBowtie)
+    } catch let error as NSError {
+      if error.domain == "NSCocoaErrorDomain" && (error.code == NSValidationNumberTooSmallError || error.code == NSValidationNumberTooLargeError) {
+        rate(currentBowtie)
+      } else {
+        print("Error: \(error.debugDescription)")
       }
     }
   }
